@@ -1,0 +1,127 @@
+openapi: 3.0.0
+info:
+  title: Ride-Hailing App API
+  version: 1.0.0
+paths:
+  /book-ride:
+    post:
+      summary: Book a ride in the ride-hailing app
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RideBookingRequest'
+      responses:
+        '200':
+          description: Ride booking approved or rejected
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RideBookingStatusResponse'
+        '4xx':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '5xx':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    RideBookingRequest:
+      type: object
+      properties:
+        user:
+          type: object
+          properties:
+            name:
+              type: string
+            contact:
+              type: string
+        pickupLocation:
+          type: object
+          properties:
+            latitude:
+              type: number
+            longitude:
+              type: number
+            address:
+              type: string
+        dropOffLocation:
+          type: object
+          properties:
+            latitude:
+              type: number
+            longitude:
+              type: number
+            address:
+              type: string
+        rideType:
+          type: string
+        specialRequests:
+          type: string
+        paymentMethod:
+          type: string
+        notificationPreferences:
+          type: array
+          items:
+            type: string
+        device:
+          type: object
+          properties:
+            type:
+              type: string
+            model:
+              type: string
+            os:
+              type: string
+        browser:
+          type: object
+          properties:
+            name:
+              type: string
+            version:
+              type: string
+        appVersion:
+          type: string
+        screenResolution:
+          type: string
+        referrer:
+          type: string
+        deviceLanguage:
+          type: string
+
+    RideBookingStatusResponse:
+      type: object
+      properties:
+        rideId:
+          type: string
+        status:
+          type: string
+          description: 'Ride status: "Ride Approved" or "Ride Rejected". If rejected, suggestedProducts is empty.'
+        suggestedProducts:
+          type: array
+          description: 'A list of new ride products, bicycles, motorbikes, scouters, cars, suggested to the user, based on his recent rides.'
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+              title:
+                type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string

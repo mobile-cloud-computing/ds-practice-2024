@@ -1,0 +1,118 @@
+openapi: 3.0.0
+info:
+  title: Fintech Fund Transfer API
+  version: 1.0.0
+paths:
+  /transfer:
+    post:
+      summary: Initiate a fund transfer in the fintech app
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferRequest'
+      responses:
+        '200':
+          description: Transfer approved or rejected
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransferStatusResponse'
+        '4xx':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '5xx':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    TransferRequest:
+      type: object
+      properties:
+        sender:
+          type: object
+          properties:
+            name:
+              type: string
+            accountNumber:
+              type: string
+        recipient:
+          type: object
+          properties:
+            name:
+              type: string
+            accountNumber:
+              type: string
+        amount:
+          type: number
+        currency:
+          type: string
+        paymentMethod:
+          type: string
+        transferNote:
+          type: string
+        notificationPreferences:
+          type: array
+          items:
+            type: string
+        device:
+          type: object
+          properties:
+            type:
+              type: string
+            model:
+              type: string
+            os:
+              type: string
+        browser:
+          type: object
+          properties:
+            name:
+              type: string
+            version:
+              type: string
+        appVersion:
+          type: string
+        screenResolution:
+          type: string
+        referrer:
+          type: string
+        deviceLanguage:
+          type: string
+
+    TransferStatusResponse:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        status:
+          type: string
+          description: 'Transfer status: "Transfer Approved" or "Transfer Rejected". If rejected, suggestedProducts is empty.'
+        suggestedProducts:
+          type: array
+          description: 'A list of new financial products, currencies, cards, investment funds, suggested to the user, based on his recent transfers.'
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+              title:
+                type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string

@@ -1,0 +1,147 @@
+openapi: 3.0.0
+info:
+  title: Online Bookshop Checkout API
+  version: 1.0.0
+paths:
+  /checkout:
+    post:
+      summary: Place an order at the online bookshop
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckoutRequest'
+      responses:
+        '200':
+          description: Order approval or rejection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderStatusResponse'
+        '4xx':
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '5xx':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    CheckoutRequest:
+      type: object
+      properties:
+        user:
+          type: object
+          properties:
+            name:
+              type: string
+            contact:
+              type: string
+        creditCard:
+          type: object
+          properties:
+            number:
+              type: string
+            expirationDate:
+              type: string
+            cvv:
+              type: string
+        userComment:
+          type: string
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              quantity:
+                type: integer
+        discountCode:
+          type: string
+        shippingMethod:
+          type: string
+        giftMessage:
+          type: string
+        billingAddress:
+          type: object
+          properties:
+            street:
+              type: string
+            city:
+              type: string
+            state:
+              type: string
+            zip:
+              type: string
+            country:
+              type: string
+        giftWrapping:
+          type: boolean
+        termsAndConditionsAccepted:
+          type: boolean
+        notificationPreferences:
+          type: array
+          items:
+            type: string
+        device:
+          type: object
+          properties:
+            type:
+              type: string
+            model:
+              type: string
+            os:
+              type: string
+        browser:
+          type: object
+          properties:
+            name:
+              type: string
+            version:
+              type: string
+        appVersion:
+          type: string
+        screenResolution:
+          type: string
+        referrer:
+          type: string
+        deviceLanguage:
+          type: string
+
+    OrderStatusResponse:
+      type: object
+      properties:
+        orderId:
+          type: string
+        status:
+          type: string
+          description: 'Order status: "Order Approved" or "Order Rejected". If rejected, suggestedBooks is empty.'
+        suggestedBooks:
+          type: array
+          items:
+            type: object
+            properties:
+              bookId:
+                type: string
+              title:
+                type: string
+              author:
+                type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
