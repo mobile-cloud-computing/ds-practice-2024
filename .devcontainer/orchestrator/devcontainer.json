@@ -1,0 +1,9 @@
+{
+	"name": "orchestrator-dev",
+	"dockerComposeFile": [
+		"../../docker-compose.yaml"
+	],
+	"service": "orchestrator",
+	"shutdownAction": "none",
+	"workspaceFolder": "/app"
+}

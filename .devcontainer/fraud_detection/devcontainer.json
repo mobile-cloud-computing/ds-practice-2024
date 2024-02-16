@@ -1,0 +1,9 @@
+{
+	"name": "fraud-detection-dev",
+	"dockerComposeFile": [
+		"../../docker-compose.yaml"
+	],
+	"service": "fraud_detection",
+	"shutdownAction": "none",
+	"workspaceFolder": "/app"
+}
