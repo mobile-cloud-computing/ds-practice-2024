@@ -4,6 +4,7 @@ package hello;
 
 service HelloService {
     rpc SayHello (HelloRequest) returns (HelloResponse);
+    rpc DetectFraud (DetectFraudRequest) returns (DetectFraudResponse);
 }
 
 message HelloRequest {
@@ -12,4 +13,67 @@ message HelloRequest {
 
 message HelloResponse {
     string greeting = 1;
+}
+
+// Define all the request data structures
+message User {
+  string name = 1;
+  string contact = 2;
+}
+
+message CreditCard {
+  string number = 1;
+  string expirationDate = 2;
+  string cvv = 3;
+}
+
+message Item {
+  string name = 1;
+  int32 quantity = 2;
+}
+
+message Address {
+  string street = 1;
+  string city = 2;
+  string state = 3;
+  string zip = 4;
+  string country = 5;
+}
+
+message Device {
+  string type = 1;
+  string model = 2;
+  string os = 3;
+}
+
+message Browser {
+  string name = 1;
+  string version = 2;
+}
+
+// The main request to be sent for detecting fraud
+message DetectFraudRequest {
+  User user = 1;
+  CreditCard creditCard = 2;
+  string userComment = 3;
+  repeated Item items = 4;
+  string discountCode = 5;
+  string shippingMethod = 6;
+  string giftMessage = 7;
+  Address billingAddress = 8;
+  bool giftWrapping = 9;
+  bool termsAndConditionsAccepted = 10;
+  repeated string notificationPreferences = 11;
+  Device device = 12;
+  Browser browser = 13;
+  string appVersion = 14;
+  string screenResolution = 15;
+  string referrer = 16;
+  string deviceLanguage = 17;
+}
+
+// The response to be returned after fraud detection
+message DetectFraudResponse {
+  bool isFraud = 1;
+  string reason = 2; // Optional reason for why the request is considered fraudulent
 }
