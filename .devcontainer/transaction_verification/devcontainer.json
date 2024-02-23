@@ -1,0 +1,10 @@
+{
+	"name": "transaction-verification-dev",
+	"dockerComposeFile": [
+		"../../docker-compose.yaml",
+		"./docker-compose-dev.yaml"
+	],
+	"service": "transaction_verification",
+	"shutdownAction": "none",
+	"workspaceFolder": "/app"
+}

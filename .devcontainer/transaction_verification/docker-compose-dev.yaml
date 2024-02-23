@@ -1,0 +1,11 @@
+version: '3'
+services:
+  transaction_verification:
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+        reservations:
+          cpus: '0.2'
+          memory: 256M
