@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package transaction_verification;
+
+service TransactionVerificationService {
+    rpc VerifyTRansaction (VerificationRequest) returns (VerificationResponse);
+}
+
+message VerificationRequest {
+    repeated TransactionItem items = 1;
+    string userName = 2;
+    string userContact = 3;
+    string discountCode = 4;
+    BillingAddressInfo billingAddress = 5;
+}
+
+message TransactionItem {
+    string name = 1;
+    int32 quantity = 2;
+}
+
+message BillingAddressInfo {
+    string street = 1;
+    string city = 2;
+    string state = 3;
+    string zip = 4;
+    string country = 5;
+}
+
+message VerificationResponse {
+    bool isVerified = 1;
+    optional string message = 2;
+}

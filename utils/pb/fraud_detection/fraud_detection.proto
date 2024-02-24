@@ -13,3 +13,20 @@ message HelloRequest {
 message HelloResponse {
     string greeting = 1;
 }
+
+
+service FraudDetectionService {
+    rpc DetectFraud(FraudDetectionRequest) returns (FraudDetectionResponse);
+}
+
+message FraudDetectionRequest {
+    string creditCardNumber = 1;
+    string creditCardExpirationDate = 2;
+    string creditCardCVV = 3;
+    string discountCode = 4;
+}
+
+message FraudDetectionResponse {
+    bool isFraud = 1;
+    optional string message = 2;
+}
