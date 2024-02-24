@@ -3,7 +3,7 @@ syntax = "proto3";
 package transaction_verification;
 
 service TransactionVerificationService {
-    rpc VerifyTRansaction (VerificationRequest) returns (VerificationResponse);
+    rpc VerifyTransaction (VerificationRequest) returns (VerificationResponse);
 }
 
 message VerificationRequest {
