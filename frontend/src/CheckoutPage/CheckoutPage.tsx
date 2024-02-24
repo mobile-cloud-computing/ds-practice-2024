@@ -61,7 +61,7 @@ const CheckoutPage: React.FC = () => {
 
         try {
 
-            const response = await axios.post('http://0.0.0.0:8081/checkout', {
+            const response = await axios.post('http://localhost:8081/checkout', {
                 user: {
                     name: formData.userName,
                     contact: formData.userContact,
