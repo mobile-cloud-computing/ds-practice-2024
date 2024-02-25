@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package hello;
+
+service TransactionVerificationService {
+    rpc VerifyTransaction(TransactionRequest) returns (TransactionResponse);
+}
+
+message Item {
+    string item_id = 1;
+    string name = 2;
+    string quantity = 3;
+    string price = 4;
+}
+
+message UserId {
+    string user_id = 1;
+}
+
+message ShippingAddress {
+    string street = 1;
+    string city = 2;
+    string state = 3;
+    string zip = 4;
+    string country = 5;
+}
+
+message PaymentDetails {
+    string number = 1;
+    string expiration_date = 2;
+    string cvv = 3;
+    string cardholder_name = 4;
+}
+
+message TransactionRequest {
+    repeated Item items = 1;
+    UserId user_id = 2;
+    ShippingAddress shipping_address = 3;
+    PaymentDetails payment_details = 4;
+}
+
+message TransactionResponse {
+    bool is_valid = 1;
+    string message = 2;
+}
