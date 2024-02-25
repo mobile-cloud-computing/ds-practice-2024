@@ -63,6 +63,8 @@ components:
                 type: string
               quantity:
                 type: integer
+              category:
+                type: string
         discountCode:
           type: string
         shippingMethod:

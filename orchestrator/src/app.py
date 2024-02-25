@@ -7,8 +7,12 @@ import os
 FILE = __file__ if '__file__' in globals() else os.getenv("PYTHONFILE", "")
 utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/fraud_detection'))
 sys.path.insert(0, utils_path)
+utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/suggestions'))
+sys.path.insert(1, utils_path)
 import fraud_detection_pb2 as fraud_detection
 import fraud_detection_pb2_grpc as fraud_detection_grpc
+import suggestions_pb2 as suggestions
+import suggestions_pb2_grpc as suggestions_grpc
 
 import grpc
 
@@ -20,6 +24,20 @@ def greet(name='you'):
         # Call the service through the stub object.
         response = stub.SayHello(fraud_detection.HelloRequest(name=name))
     return response.greeting
+
+def suggest(items):
+    # Establish a connection with the suggestions gRPC service.
+    with grpc.insecure_channel('suggestions:50053') as channel:
+        # Create a stub object.
+        stub = suggestions_grpc.SuggestionsServiceStub(channel)
+        # Create the request object.
+        request = suggestions.SuggestionsRequest()
+        request.items.extend(items)  # Use .extend() for repeated fields
+        
+        # Call the service through the stub object.
+        response = stub.SuggestItems(request)
+
+    return response.items
 
 # Import Flask.
 # Flask is a web framework for Python.
@@ -52,14 +70,19 @@ def checkout():
     # Print request object data
     print("Request Data:", request.json)
 
-    # Dummy response following the provided YAML specification for the bookstore
+    item_categories = [item['category'] for item in request.json['items']]
+    suggested_items = suggest(item_categories)
+
+    suggested_books = [{
+        'bookId': item.bookId,
+        'title': item.title,
+        'author': item.author
+    } for item in suggested_items]
+
     order_status_response = {
         'orderId': '12345',
         'status': 'Order Approved',
-        'suggestedBooks': [
-            {'bookId': '123', 'title': 'Dummy Book 1', 'author': 'Author 1'},
-            {'bookId': '456', 'title': 'Dummy Book 2', 'author': 'Author 2'}
-        ]
+        'suggestedBooks': suggested_books
     }
 
     return order_status_response

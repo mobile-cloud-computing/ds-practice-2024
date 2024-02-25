@@ -60,7 +60,6 @@ const CheckoutPage: React.FC = () => {
         event.preventDefault();
 
         try {
-
             const response = await axios.post('http://localhost:8081/checkout', {
                 user: {
                     name: formData.userName,
@@ -76,6 +75,7 @@ const CheckoutPage: React.FC = () => {
                     {
                         name: book.title,
                         quantity: 1,
+                        category: book.category
                     },
                 ],
                 discountCode: formData.discountCode,

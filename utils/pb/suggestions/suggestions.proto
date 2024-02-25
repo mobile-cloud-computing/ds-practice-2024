@@ -7,11 +7,14 @@ service SuggestionsService {
 }
 
 message SuggestionsRequest {
-    string userName = 1;
-    string userContact = 2;
-    repeated string items = 3;
+    repeated string items = 1;
 }
 
 message SuggestionsResponse {
-    repeated string items = 1;
+    message SuggestedItem {
+        string bookId = 1;
+        string title = 2;
+        string author = 3;
+    }
+    repeated SuggestedItem items = 1;
 }

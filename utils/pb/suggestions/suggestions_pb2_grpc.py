@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from suggestions import suggestions_pb2 as suggestions_dot_suggestions__pb2
+import suggestions_pb2 as suggestions__pb2
 
 
 class SuggestionsServiceStub(object):
@@ -16,8 +16,8 @@ class SuggestionsServiceStub(object):
         """
         self.SuggestItems = channel.unary_unary(
                 '/suggestions.SuggestionsService/SuggestItems',
-                request_serializer=suggestions_dot_suggestions__pb2.SuggestionsRequest.SerializeToString,
-                response_deserializer=suggestions_dot_suggestions__pb2.SuggestionsResponse.FromString,
+                request_serializer=suggestions__pb2.SuggestionsRequest.SerializeToString,
+                response_deserializer=suggestions__pb2.SuggestionsResponse.FromString,
                 )
 
 
@@ -35,8 +35,8 @@ def add_SuggestionsServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'SuggestItems': grpc.unary_unary_rpc_method_handler(
                     servicer.SuggestItems,
-                    request_deserializer=suggestions_dot_suggestions__pb2.SuggestionsRequest.FromString,
-                    response_serializer=suggestions_dot_suggestions__pb2.SuggestionsResponse.SerializeToString,
+                    request_deserializer=suggestions__pb2.SuggestionsRequest.FromString,
+                    response_serializer=suggestions__pb2.SuggestionsResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -60,7 +60,7 @@ class SuggestionsService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/suggestions.SuggestionsService/SuggestItems',
-            suggestions_dot_suggestions__pb2.SuggestionsRequest.SerializeToString,
-            suggestions_dot_suggestions__pb2.SuggestionsResponse.FromString,
+            suggestions__pb2.SuggestionsRequest.SerializeToString,
+            suggestions__pb2.SuggestionsResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

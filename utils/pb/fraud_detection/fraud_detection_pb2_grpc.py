@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from fraud_detection import fraud_detection_pb2 as fraud__detection_dot_fraud__detection__pb2
+import fraud_detection_pb2 as fraud__detection__pb2
 
 
 class HelloServiceStub(object):
@@ -16,8 +16,8 @@ class HelloServiceStub(object):
         """
         self.SayHello = channel.unary_unary(
                 '/hello.HelloService/SayHello',
-                request_serializer=fraud__detection_dot_fraud__detection__pb2.HelloRequest.SerializeToString,
-                response_deserializer=fraud__detection_dot_fraud__detection__pb2.HelloResponse.FromString,
+                request_serializer=fraud__detection__pb2.HelloRequest.SerializeToString,
+                response_deserializer=fraud__detection__pb2.HelloResponse.FromString,
                 )
 
 
@@ -35,8 +35,8 @@ def add_HelloServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'SayHello': grpc.unary_unary_rpc_method_handler(
                     servicer.SayHello,
-                    request_deserializer=fraud__detection_dot_fraud__detection__pb2.HelloRequest.FromString,
-                    response_serializer=fraud__detection_dot_fraud__detection__pb2.HelloResponse.SerializeToString,
+                    request_deserializer=fraud__detection__pb2.HelloRequest.FromString,
+                    response_serializer=fraud__detection__pb2.HelloResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -60,8 +60,8 @@ class HelloService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/hello.HelloService/SayHello',
-            fraud__detection_dot_fraud__detection__pb2.HelloRequest.SerializeToString,
-            fraud__detection_dot_fraud__detection__pb2.HelloResponse.FromString,
+            fraud__detection__pb2.HelloRequest.SerializeToString,
+            fraud__detection__pb2.HelloResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -77,8 +77,8 @@ class FraudDetectionServiceStub(object):
         """
         self.DetectFraud = channel.unary_unary(
                 '/hello.FraudDetectionService/DetectFraud',
-                request_serializer=fraud__detection_dot_fraud__detection__pb2.FraudDetectionRequest.SerializeToString,
-                response_deserializer=fraud__detection_dot_fraud__detection__pb2.FraudDetectionResponse.FromString,
+                request_serializer=fraud__detection__pb2.FraudDetectionRequest.SerializeToString,
+                response_deserializer=fraud__detection__pb2.FraudDetectionResponse.FromString,
                 )
 
 
@@ -96,8 +96,8 @@ def add_FraudDetectionServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'DetectFraud': grpc.unary_unary_rpc_method_handler(
                     servicer.DetectFraud,
-                    request_deserializer=fraud__detection_dot_fraud__detection__pb2.FraudDetectionRequest.FromString,
-                    response_serializer=fraud__detection_dot_fraud__detection__pb2.FraudDetectionResponse.SerializeToString,
+                    request_deserializer=fraud__detection__pb2.FraudDetectionRequest.FromString,
+                    response_serializer=fraud__detection__pb2.FraudDetectionResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -121,7 +121,7 @@ class FraudDetectionService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/hello.FraudDetectionService/DetectFraud',
-            fraud__detection_dot_fraud__detection__pb2.FraudDetectionRequest.SerializeToString,
-            fraud__detection_dot_fraud__detection__pb2.FraudDetectionResponse.FromString,
+            fraud__detection__pb2.FraudDetectionRequest.SerializeToString,
+            fraud__detection__pb2.FraudDetectionResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
