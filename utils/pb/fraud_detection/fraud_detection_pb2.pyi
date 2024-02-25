@@ -15,3 +15,23 @@ class HelloResponse(_message.Message):
     GREETING_FIELD_NUMBER: _ClassVar[int]
     greeting: str
     def __init__(self, greeting: _Optional[str] = ...) -> None: ...
+
+class FraudDetectionRequest(_message.Message):
+    __slots__ = ("creditCardNumber", "creditCardExpirationDate", "creditCardCVV", "discountCode")
+    CREDITCARDNUMBER_FIELD_NUMBER: _ClassVar[int]
+    CREDITCARDEXPIRATIONDATE_FIELD_NUMBER: _ClassVar[int]
+    CREDITCARDCVV_FIELD_NUMBER: _ClassVar[int]
+    DISCOUNTCODE_FIELD_NUMBER: _ClassVar[int]
+    creditCardNumber: str
+    creditCardExpirationDate: str
+    creditCardCVV: str
+    discountCode: str
+    def __init__(self, creditCardNumber: _Optional[str] = ..., creditCardExpirationDate: _Optional[str] = ..., creditCardCVV: _Optional[str] = ..., discountCode: _Optional[str] = ...) -> None: ...
+
+class FraudDetectionResponse(_message.Message):
+    __slots__ = ("isFraud", "message")
+    ISFRAUD_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    isFraud: bool
+    message: str
+    def __init__(self, isFraud: bool = ..., message: _Optional[str] = ...) -> None: ...
