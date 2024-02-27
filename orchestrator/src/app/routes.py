@@ -45,7 +45,10 @@ def init_routes(app):
             data = schema.load(request.get_json())
 
         except ValidationError as e:
-            return jsonify(e.messages), 400
+            response = {"code": "400", "message": "Invalid request parameters."}
+            response_code = 400
+
+            return jsonify(response), response_code
 
         if fraud(creditcard=data['creditCard']):
             response = order_status_response
