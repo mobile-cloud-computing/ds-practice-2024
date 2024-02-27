@@ -52,7 +52,7 @@ def serve():
     port = "50052"
     server.add_insecure_port("[::]:" + port)
     server.start()
-    print("Server started. Listening on port 50051.")
+    print(f"Server started. Listening on port {port}.")
     server.wait_for_termination()
 
 if __name__ == '__main__':
