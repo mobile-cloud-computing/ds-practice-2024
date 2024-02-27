@@ -13,6 +13,7 @@ import fraud_detection_pb2_grpc as fraud_detection_grpc
 import grpc
 from concurrent import futures
 
+
 # Create a class to define the server functions, derived from
 # fraud_detection_pb2_grpc.HelloServiceServicer
 class HelloService(fraud_detection_grpc.HelloServiceServicer):
@@ -27,6 +28,7 @@ class HelloService(fraud_detection_grpc.HelloServiceServicer):
         # Return the response object
         return response
 
+
 class FraudService(fraud_detection_grpc.FraudServiceServicer):
     def DetectFraud(self, request, context):
         print(request, context)
@@ -34,6 +36,7 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
         response.determination = True
 
         return response
+
 
 def serve():
     # Create a gRPC server
@@ -49,6 +52,7 @@ def serve():
     print("Server started. Listening on port 50051.")
     # Keep thread alive
     server.wait_for_termination()
+
 
 if __name__ == '__main__':
     serve()

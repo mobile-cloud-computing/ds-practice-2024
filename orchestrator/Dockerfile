@@ -15,4 +15,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install reloadium
 
 # Set the command to run the container
-CMD reloadium run "orchestrator/src/app.py"
+CMD python3 "orchestrator/src/run.py"
+#CMD sleep 600

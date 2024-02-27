@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import fraud_detection_pb2 as fraud__detection__pb2
+import utils.pb.fraud_detection.fraud_detection_pb2 as fraud__detection__pb2
 
 
 class HelloServiceStub(object):
