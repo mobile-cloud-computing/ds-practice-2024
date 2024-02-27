@@ -47,11 +47,11 @@ def init_routes(app):
         except ValidationError as e:
             return jsonify(e.messages), 400
 
-        print(data)
         if fraud(creditcard=data['creditCard']):
-            print("Determined to be true.")
-            response = ""
+            response = order_status_response
+            response_code = 200
         else:
-            print("Determined to be false.")
+            response = {"code": "400", "message": "Fraud detected."}
+            response_code = 400
 
-        return jsonify(order_status_response), 200
+        return jsonify(response), response_code

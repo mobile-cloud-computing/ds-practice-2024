@@ -30,10 +30,28 @@ class HelloService(fraud_detection_grpc.HelloServiceServicer):
 
 
 class FraudService(fraud_detection_grpc.FraudServiceServicer):
+    # Extremely simplistic fraud detection is handled here.
     def DetectFraud(self, request, context):
-        print(request, context)
         response = fraud_detection.Determination()
         response.determination = True
+
+        # Check if credit card number is correct length.
+        if not 20 > len(str(request.creditcard.number)) > 15:
+            print("Invalid credit card number")
+            response.determination = False
+
+        # Check if expiration date is valid and in the future.
+        try:
+            import datetime
+            datetime.datetime.strptime(request.creditcard.expirationDate, "%M/%y")
+        except ValueError:
+            print("Invalid credit card expiration date")
+            response.determination = False
+
+        # Check if CVV is valid.
+        if not 1000 > int(request.creditcard.cvv) > 0 or len(str(request.creditcard.cvv)) != 3:
+            print("Invalid credit card CVV")
+            response.determination = False
 
         return response
 
