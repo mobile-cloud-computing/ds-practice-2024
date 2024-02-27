@@ -84,3 +84,21 @@ services:
         reservations:
           cpus: '0.05'
           memory: 50M
+  suggestions:
+    build:
+      context: ./
+      dockerfile: ./suggestions/Dockerfile
+    ports:
+      - 50053:5005
+    environment:
+      - PYTHONUNBUFFERED=TRUE
+      - PYTHONFILE=/app/suggestions/src/app.py
+    volumes:
+      - ./utils:/app/utils
+      - ./suggestions/src:/app/suggestions/src
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 50M

@@ -1,0 +1,10 @@
+{
+	"name": "suggestions-dev",
+	"dockerComposeFile": [
+		"../../docker-compose.yaml",
+		"./docker-compose-dev.yaml"
+	],
+	"service": "suggestions",
+	"shutdownAction": "none",
+	"workspaceFolder": "/app"
+}
