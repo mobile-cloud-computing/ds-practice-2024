@@ -19,10 +19,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.3'
-          memory: 512M
+          memory: 1G
         reservations:
-          cpus: '0.1'
           memory: 100M
   orchestrator:
     build:
@@ -49,10 +47,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'
           memory: 256M
         reservations:
-          cpus: '0.05'
           memory: 50M
   fraud_detection:
     build:
@@ -79,10 +75,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.2'
           memory: 256M
         reservations:
-          cpus: '0.05'
           memory: 50M
   suggestions:
     build:
@@ -96,6 +90,24 @@ services:
     volumes:
       - ./utils:/app/utils
       - ./suggestions/src:/app/suggestions/src
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 50M
+  transaction_verification:
+    build:
+      context: ./
+      dockerfile: ./transaction_verification/Dockerfile
+    ports:
+      - 50052:50052
+    environment:
+      - PYTHONUNBUFFERED=TRUE
+      - PYTHONFILE=/app/transaction_verification/src/app.py
+    volumes:
+      - ./utils:/app/utils
+      - ./transaction_verification/src:/app/transaction_verification/src
     deploy:
       resources:
         limits:

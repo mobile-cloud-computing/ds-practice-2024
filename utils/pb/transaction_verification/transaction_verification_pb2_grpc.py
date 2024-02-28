@@ -2,10 +2,10 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import fraud_detection_pb2 as fraud__detection__pb2
+import transaction_verification_pb2 as transaction__verification__pb2
 
 
-class FraudDetectionServiceStub(object):
+class TransactionServiceStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -14,42 +14,42 @@ class FraudDetectionServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.DetectFraud = channel.unary_unary(
-                '/fraud_detection.FraudDetectionService/DetectFraud',
-                request_serializer=fraud__detection__pb2.DetectFraudRequest.SerializeToString,
-                response_deserializer=fraud__detection__pb2.DetectFraudResponse.FromString,
+        self.VerifyTransaction = channel.unary_unary(
+                '/transaction_verification.TransactionService/VerifyTransaction',
+                request_serializer=transaction__verification__pb2.VerifyRequest.SerializeToString,
+                response_deserializer=transaction__verification__pb2.VerifyResponse.FromString,
                 )
 
 
-class FraudDetectionServiceServicer(object):
+class TransactionServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def DetectFraud(self, request, context):
+    def VerifyTransaction(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
 
-def add_FraudDetectionServiceServicer_to_server(servicer, server):
+def add_TransactionServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'DetectFraud': grpc.unary_unary_rpc_method_handler(
-                    servicer.DetectFraud,
-                    request_deserializer=fraud__detection__pb2.DetectFraudRequest.FromString,
-                    response_serializer=fraud__detection__pb2.DetectFraudResponse.SerializeToString,
+            'VerifyTransaction': grpc.unary_unary_rpc_method_handler(
+                    servicer.VerifyTransaction,
+                    request_deserializer=transaction__verification__pb2.VerifyRequest.FromString,
+                    response_serializer=transaction__verification__pb2.VerifyResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'fraud_detection.FraudDetectionService', rpc_method_handlers)
+            'transaction_verification.TransactionService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
  # This class is part of an EXPERIMENTAL API.
-class FraudDetectionService(object):
+class TransactionService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def DetectFraud(request,
+    def VerifyTransaction(request,
             target,
             options=(),
             channel_credentials=None,
@@ -59,8 +59,8 @@ class FraudDetectionService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/fraud_detection.FraudDetectionService/DetectFraud',
-            fraud__detection__pb2.DetectFraudRequest.SerializeToString,
-            fraud__detection__pb2.DetectFraudResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/transaction_verification.TransactionService/VerifyTransaction',
+            transaction__verification__pb2.VerifyRequest.SerializeToString,
+            transaction__verification__pb2.VerifyResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
