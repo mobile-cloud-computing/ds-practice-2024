@@ -14,6 +14,8 @@ import grpc
 from concurrent import futures
 
 
+
+
 # Create a class to define the server functions, derived from
 # fraud_detection_pb2_grpc.HelloServiceServicer
 class HelloService(fraud_detection_grpc.HelloServiceServicer):
@@ -55,12 +57,11 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
 
         return response
 
-
 def serve():
     # Create a gRPC server
     server = grpc.server(futures.ThreadPoolExecutor())
     # Add HelloService
-    # fraud_detection_grpc.add_HelloServiceServicer_to_server(HelloService(), server)
+    fraud_detection_grpc.add_HelloServiceServicer_to_server(HelloService(), server)
     fraud_detection_grpc.add_FraudServiceServicer_to_server(FraudService(), server)
     # Listen on port 50051
     port = "50051"
