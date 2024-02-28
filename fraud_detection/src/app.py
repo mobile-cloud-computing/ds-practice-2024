@@ -15,34 +15,25 @@ from concurrent import futures
 
 # Create a class to define the server functions, derived from
 # fraud_detection_pb2_grpc.HelloServiceServicer
-class HelloService(fraud_detection_grpc.HelloServiceServicer):
+class FraudDetectionService(fraud_detection_grpc.FraudDetectionServiceServicer):
     # Created dummy fraud detection
-    def SayHello(self, request, context):
+    def DetectFraud(self, request, context):
+        print("Received detect fraud request")
+        is_fraud = self.is_user_fraudulent(request.userName) or self.is_creditcard_fraudulent(request.creditCard)
+        print(f"User {'is' if is_fraud else 'is not'} fraudulent.")
+        return is_fraud
 
-        is_fraudulent = self.check_fraud(request)
-        response = fraud_detection.HelloResponse()
-
-        if is_fraudulent:
-            response.greeting = f"Fraud detected for {request.name}!"
-        else:
-            response.greeting = f"No fraud detected for {request.name}."
-
-        print(response.greeting)
-        
-        return response
+    def is_user_fraudulent(username):
+        blacklist = ["James"]
+        return username in blacklist
     
-    def check_fraud(self, request):
-        fraud_keywords = ["fraud", "scam", "fake", "illegal", "unauthorized", "guns", "terrorism"]
-
-        for keyword in fraud_keywords:
-            if keyword in request.name.lower():
-                return True
-
+    def is_creditcard_fraudulent(creditcard):
+        return creditcard.ccv == "123"
+    
 def serve():
     # Create a gRPC server
     server = grpc.server(futures.ThreadPoolExecutor())
-    # Add HelloService
-    fraud_detection_grpc.add_HelloServiceServicer_to_server(HelloService(), server)
+    fraud_detection_grpc.add_FraudDetectionServiceServicer_to_server(FraudDetectionService(), server)
     # Listen on port 50051
     port = "50051"
     server.add_insecure_port("[::]:" + port)
