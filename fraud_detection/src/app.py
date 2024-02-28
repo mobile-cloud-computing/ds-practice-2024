@@ -21,7 +21,7 @@ class FraudDetectionService(fraud_detection_grpc.FraudDetectionServiceServicer):
         print("Received detect fraud request")
         is_fraud = self.is_user_fraudulent(request.userName) or self.is_creditcard_fraudulent(request.creditCard)
         print(f"User {'is' if is_fraud else 'is not'} fraudulent.")
-        return is_fraud
+        return fraud_detection.DetectFraudResponse(isFraud=is_fraud)
 
     def is_user_fraudulent(username):
         blacklist = ["James"]
