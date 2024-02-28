@@ -31,8 +31,8 @@ services:
       # The PYTHONUNBUFFERED environment variable ensures that the output from the application is logged to the console
       - PYTHONUNBUFFERED=TRUE
       # The PYTHONFILE environment variable specifies the absolute entry point of the application
-      # Check __init__.py in the orchestrator directory to see how this is used
-      - PYTHONFILE=/app/orchestrator/src/__init__.py
+      # Check app.py in the orchestrator directory to see how this is used
+      - PYTHONFILE=/app/orchestrator/src/app.py
     volumes:
       # Mount the utils directory in the current directory to the /app/utils directory in the container
       - ./utils:/app/utils
@@ -53,8 +53,8 @@ services:
       # The PYTHONUNBUFFERED environment variable ensures that the output from the application is logged to the console
       - PYTHONUNBUFFERED=TRUE
       # The PYTHONFILE environment variable specifies the absolute entry point of the application
-      # Check __init__.py in the fraud_detection directory to see how this is used
-      - PYTHONFILE=/app/fraud_detection/src/__init__.py
+      # Check app.py in the fraud_detection directory to see how this is used
+      - PYTHONFILE=/app/fraud_detection/src/app.py
     volumes:
       # Mount the utils directory in the current directory to the /app/utils directory in the container
       - ./utils:/app/utils

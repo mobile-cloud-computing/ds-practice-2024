@@ -1,10 +1,10 @@
+from pathlib import Path
 import sys
-import os
 
-# This set of lines is needed due to reloadium behaving differently with Python module paths than Python itself.
-FILE = __file__ if '__file__' in globals() else os.getenv("PYTHONFILE", "")
-utils_path = os.path.abspath(os.path.join(FILE, 'orchestrator/src/'))
-sys.path.insert(0, utils_path)
+# Add parent path to Python path to be able to import modules
+current_dir = Path(__file__).parent.absolute()
+app_dir = current_dir.parent.parent
+sys.path.insert(0, str(app_dir))
 
 from app import create_app
 
