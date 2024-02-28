@@ -2,7 +2,7 @@ from flask import request, jsonify
 
 from .schemas.checkout import CheckoutSchema
 from marshmallow import ValidationError
-from .services.grpc_client import fraud
+from .services.grpc_client import fraud, verify_transaction
 
 
 def init_routes(app):
@@ -50,11 +50,18 @@ def init_routes(app):
 
             return jsonify(response), response_code
 
-        if fraud(creditcard=data['creditCard']):
+        # if fraud(creditcard=data['creditCard']):
+        #     response = order_status_response
+        #     response_code = 200
+        # else:
+        #     response = {"code": "400", "message": "Fraud detected."}
+        #     response_code = 400
+
+        if verify_transaction(creditcard=data['creditCard']):
             response = order_status_response
             response_code = 200
         else:
-            response = {"code": "400", "message": "Fraud detected."}
+            response = {"code": "400", "message": "Transaction credentials are not valid."}
             response_code = 400
 
         return jsonify(response), response_code
