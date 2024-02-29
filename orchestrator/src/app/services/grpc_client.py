@@ -16,14 +16,14 @@ def greet(name='you'):
         response = stub.SayHello(fraud_detection.HelloRequest(name=name))
     return response.greeting
 
-def fraud(creditcard):
-    with grpc.insecure_channel('fraud_detection:50051') as channel:
+async def fraud(creditcard):
+    async with grpc.aio.insecure_channel('fraud_detection:50051') as channel:
         stub = fraud_detection_grpc.FraudServiceStub(channel)
-        response = stub.DetectFraud(fraud_detection.CheckoutRequest(creditcard=creditcard))
+        response = await stub.DetectFraud(fraud_detection.CheckoutRequest(creditcard=creditcard))
     return response.determination
 
-def verify_transaction(creditcard):
-    with grpc.insecure_channel('transaction_verification:50052') as channel:
+async def verify_transaction(creditcard):
+    async with grpc.aio.insecure_channel('transaction_verification:50052') as channel:
         stub = transaction_verification_grpc.TransactionServiceStub(channel)
-        response = stub.verifyTransaction(transaction_verification.CheckoutRequest(creditcard=creditcard))
+        response = await stub.verifyTransaction(transaction_verification.CheckoutRequest(creditcard=creditcard))
     return response.determination
