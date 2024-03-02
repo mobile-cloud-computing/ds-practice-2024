@@ -35,7 +35,7 @@ Even though you can run the code locally, it is recommended to use Docker and Do
 If you want to run the code locally, you need to install the following dependencies:
 
 backend services:
-- Python 3.8 or newer
+- Python 3.11 or newer
 - pip
 - [grpcio-tools](https://grpc.io/docs/languages/python/quickstart/)
 - requirements.txt dependencies from each service

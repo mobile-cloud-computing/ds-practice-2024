@@ -1,6 +1,6 @@
 blinker==1.7.0
 click==8.1.7
-Flask==3.0.0
+flask[async]==3.0.0
 grpcio==1.60.0
 grpcio-tools==1.60.0
 itsdangerous==2.1.2

@@ -23,12 +23,14 @@ class FraudDetectionService(fraud_detection_grpc.FraudDetectionServiceServicer):
         print(f"User {'is' if is_fraud else 'is not'} fraudulent.")
         return fraud_detection.DetectFraudResponse(isFraud=is_fraud)
 
+    @staticmethod
     def is_user_fraudulent(username):
         blacklist = ["James"]
         return username in blacklist
     
+    @staticmethod
     def is_creditcard_fraudulent(creditcard):
-        return creditcard.ccv == "123"
+        return creditcard.cvv == "123"
     
 def serve():
     # Create a gRPC server

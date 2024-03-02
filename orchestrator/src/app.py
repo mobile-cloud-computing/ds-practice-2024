@@ -1,25 +1,39 @@
+import asyncio
+from concurrent import futures
 import sys
 import os
+import uuid
 
 # This set of lines are needed to import the gRPC stubs.
 # The path of the stubs is relative to the current file, or absolute inside the container.
 # Change these lines only if strictly needed.
 FILE = __file__ if '__file__' in globals() else os.getenv("PYTHONFILE", "")
-utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/fraud_detection'))
-sys.path.insert(0, utils_path)
+for service in ['fraud_detection', 'suggestions', 'transaction_verification']:
+    sys.path.insert(0, os.path.abspath(os.path.join(FILE, f'../../../utils/pb/{service}')))
+
+from fraud_detection_pb2_grpc import FraudDetectionServiceStub
 import fraud_detection_pb2 as fraud_detection
-import fraud_detection_pb2_grpc as fraud_detection_grpc
+from suggestions_pb2_grpc import SuggestionServiceStub
+import suggestions_pb2 as suggestions
+from transaction_verification_pb2_grpc import TransactionServiceStub
+import transaction_verification_pb2 as transaction_verification
 
 import grpc
 
-def greet(name='you'):
-    # Establish a connection with the fraud-detection gRPC service.
+def detect_fraud(request: fraud_detection.DetectFraudRequest) -> fraud_detection.DetectFraudResponse:
     with grpc.insecure_channel('fraud_detection:50051') as channel:
-        # Create a stub object.
-        stub = fraud_detection_grpc.HelloServiceStub(channel)
-        # Call the service through the stub object.
-        response = stub.SayHello(fraud_detection.HelloRequest(name=name))
-    return response.greeting
+        stub = FraudDetectionServiceStub(channel)
+        return stub.DetectFraud(request)
+    
+def verify_transaction(request: transaction_verification.VerifyRequest) -> transaction_verification.VerifyResponse:
+    with grpc.insecure_channel('transaction_verification:50052') as channel:
+        stub = TransactionServiceStub(channel)
+        return stub.VerifyTransaction(request)
+    
+def get_suggestions(request: suggestions.SuggestionRequest) -> suggestions.SuggestionResponse:
+    with grpc.insecure_channel('suggestions:50053') as channel:
+        stub = SuggestionServiceStub(channel)
+        return stub.SuggestBooks(request)
 
 # Import Flask.
 # Flask is a web framework for Python.
@@ -32,33 +46,61 @@ from flask_cors import CORS
 app = Flask(__name__)
 # Enable CORS for the app.
 CORS(app)
-
-# Define a GET endpoint.
-@app.route('/', methods=['GET'])
-def index():
-    """
-    Responds with 'Hello, [name]' when a GET request is made to '/' endpoint.
-    """
-    # Test the fraud-detection gRPC service.
-    response = greet(name='orchestrator')
-    # Return the response.
-    return response
+# Create ThreadPoolExecutor for handling gRPC requests.
+executor = futures.ThreadPoolExecutor(max_workers=10)
 
 @app.route('/checkout', methods=['POST'])
-def checkout():
+async def checkout():
     """
     Responds with a JSON object containing the order ID, status, and suggested books.
     """
-    # Print request object data
-    print("Request Data:", request.json)
+    print("--- receiving new checkout request ---")
+
+    # --- prepare requests ---
+    try:
+        # just using the spread operator for creating the data objects
+        # is hacky and shouldl not be done in production
+        transaction_verification_request = transaction_verification.VerifyRequest(
+            creditCard=transaction_verification.CreditCard(**request.json['creditCard']),
+            items=[transaction_verification.Item(**item) for item in request.json['items']],
+        )
+        fraud_detection_request = fraud_detection.DetectFraudRequest(
+            userName=request.json['user']['name'],
+            creditCard=fraud_detection.CreditCard(**request.json['creditCard']),
+        )
+        suggestion_request = suggestions.SuggestionRequest(
+            bookTitles=[item['name'] for item in request.json['items']],
+        )
+    except (KeyError, TypeError) as e:
+        print(repr(e))
+        return {
+            'code': "400",
+            'message': "Invalid request",
+        }, 400
+
+    # --- execute requests in workers ---
+    loop = asyncio.get_event_loop()
+    transaction_verification_result, fraud_detection_result, suggestion_result = await asyncio.gather(
+        loop.run_in_executor(executor, verify_transaction, transaction_verification_request),
+        loop.run_in_executor(executor, detect_fraud, fraud_detection_request),
+        loop.run_in_executor(executor, get_suggestions, suggestion_request)
+    )
+
+    order_id = str(uuid.uuid1())
+    order_approved = transaction_verification_result.isValid and not fraud_detection_result.isFraud
+    print(f"Order {order_id} is {'approved' if order_approved else 'rejected'}")
 
     # Dummy response following the provided YAML specification for the bookstore
     order_status_response = {
-        'orderId': '12345',
-        'status': 'Order Approved',
+        'orderId': order_id,
+        'status': 'Order Approved' if order_approved else 'Order Rejected',
         'suggestedBooks': [
-            {'bookId': '123', 'title': 'Dummy Book 1', 'author': 'Author 1'},
-            {'bookId': '456', 'title': 'Dummy Book 2', 'author': 'Author 2'}
+            {
+                'id': book.id,
+                'title': book.title,
+                'author': book.author
+            }
+            for book in suggestion_result.suggestions
         ]
     }
 
