@@ -7,6 +7,7 @@ import os
 FILE = __file__ if '__file__' in globals() else os.getenv("PYTHONFILE", "")
 utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/fraud_detection'))
 sys.path.insert(0, utils_path)
+
 import fraud_detection_pb2 as fraud_detection
 import fraud_detection_pb2_grpc as fraud_detection_grpc
 
@@ -29,6 +30,7 @@ class HelloService(fraud_detection_grpc.HelloServiceServicer):
         print(response.greeting)
         # Return the response object
         return response
+    
 
 
 class FraudService(fraud_detection_grpc.FraudServiceServicer):

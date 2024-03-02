@@ -14,7 +14,11 @@ _sym_db = _symbol_database.Default()
 
 
 
+<<<<<<< Updated upstream
 DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15\x66raud_detection.proto\x12\x05hello\"\x1c\n\x0cHelloRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"!\n\rHelloResponse\x12\x10\n\x08greeting\x18\x01 \x01(\t\"8\n\x0f\x43heckoutRequest\x12%\n\ncreditcard\x18\x01 \x01(\x0b\x32\x11.hello.CreditCard\"A\n\nCreditCard\x12\x0e\n\x06number\x18\x01 \x01(\t\x12\x16\n\x0e\x65xpirationDate\x18\x02 \x01(\t\x12\x0b\n\x03\x63vv\x18\x03 \x01(\t\"&\n\rDetermination\x12\x15\n\rdetermination\x18\x01 \x01(\x08\x32\x45\n\x0cHelloService\x12\x35\n\x08SayHello\x12\x13.hello.HelloRequest\x1a\x14.hello.HelloResponse2K\n\x0c\x46raudService\x12;\n\x0b\x44\x65tectFraud\x12\x16.hello.CheckoutRequest\x1a\x14.hello.Determinationb\x06proto3')
+=======
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15\x66raud_detection.proto\x12\x05hello\"\x1c\n\x0cHelloRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"!\n\rHelloResponse\x12\x10\n\x08greeting\x18\x01 \x01(\t\"=\n\x0c\x46raudRequest\x12\x11\n\tuser_name\x18\x01 \x01(\t\x12\x1a\n\x12\x63redit_card_number\x18\x02 \x01(\x05\"\x1e\n\rFraudResponse\x12\r\n\x05\x66raud\x18\x01 \x01(\x08\x32\x45\n\x0cHelloService\x12\x35\n\x08SayHello\x12\x13.hello.HelloRequest\x1a\x14.hello.HelloResponse2J\n\x0e\x46raudDetection\x12\x38\n\x0b\x44\x65tectFraud\x12\x13.hello.FraudRequest\x1a\x14.hello.FraudResponseb\x06proto3')
+>>>>>>> Stashed changes
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -25,6 +29,7 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['_HELLOREQUEST']._serialized_end=60
   _globals['_HELLORESPONSE']._serialized_start=62
   _globals['_HELLORESPONSE']._serialized_end=95
+<<<<<<< Updated upstream
   _globals['_CHECKOUTREQUEST']._serialized_start=97
   _globals['_CHECKOUTREQUEST']._serialized_end=153
   _globals['_CREDITCARD']._serialized_start=155
@@ -35,4 +40,14 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['_HELLOSERVICE']._serialized_end=331
   _globals['_FRAUDSERVICE']._serialized_start=333
   _globals['_FRAUDSERVICE']._serialized_end=408
+=======
+  _globals['_FRAUDREQUEST']._serialized_start=97
+  _globals['_FRAUDREQUEST']._serialized_end=158
+  _globals['_FRAUDRESPONSE']._serialized_start=160
+  _globals['_FRAUDRESPONSE']._serialized_end=190
+  _globals['_HELLOSERVICE']._serialized_start=192
+  _globals['_HELLOSERVICE']._serialized_end=261
+  _globals['_FRAUDDETECTION']._serialized_start=263
+  _globals['_FRAUDDETECTION']._serialized_end=337
+>>>>>>> Stashed changes
 # @@protoc_insertion_point(module_scope)
