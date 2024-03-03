@@ -1,9 +1,14 @@
 syntax = "proto3";
 
-package hello;
+package suggestions_service;
 
 service SuggestionService {
     rpc Suggest (SuggestionRequest) returns (SuggestionResponse);
+}
+message Book{
+    int32 id  =1; 
+    string name = 2; 
+    string author = 3;
 }
 
 message SuggestionRequest {
@@ -11,5 +16,5 @@ message SuggestionRequest {
 }
 
 message SuggestionResponse {
-    repeated string book_suggestions = 1;
+    repeated Book book_suggestions = 1;
 }

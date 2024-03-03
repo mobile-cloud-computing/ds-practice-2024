@@ -11,8 +11,7 @@ COPY ./orchestrator/requirements.txt .
 # Install the Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 # Install reloadium for hot reloading
-# This allows us to make changes to the code without having to rebuild the container
-RUN pip install reloadium
+
 
 # Set the command to run the container
 CMD python3 "orchestrator/src/run.py"

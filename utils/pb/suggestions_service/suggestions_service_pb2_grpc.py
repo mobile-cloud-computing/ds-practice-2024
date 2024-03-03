@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import suggestions_service_pb2 as suggestions__service__pb2
+import utils.pb.suggestions_service.suggestions_service_pb2 as suggestions__service__pb2
 
 
 class SuggestionServiceStub(object):
@@ -15,7 +15,7 @@ class SuggestionServiceStub(object):
             channel: A grpc.Channel.
         """
         self.Suggest = channel.unary_unary(
-                '/hello.SuggestionService/Suggest',
+                '/suggestions_service.SuggestionService/Suggest',
                 request_serializer=suggestions__service__pb2.SuggestionRequest.SerializeToString,
                 response_deserializer=suggestions__service__pb2.SuggestionResponse.FromString,
                 )
@@ -40,7 +40,7 @@ def add_SuggestionServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'hello.SuggestionService', rpc_method_handlers)
+            'suggestions_service.SuggestionService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -59,7 +59,7 @@ class SuggestionService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/hello.SuggestionService/Suggest',
+        return grpc.experimental.unary_unary(request, target, '/suggestions_service.SuggestionService/Suggest',
             suggestions__service__pb2.SuggestionRequest.SerializeToString,
             suggestions__service__pb2.SuggestionResponse.FromString,
             options, channel_credentials,
