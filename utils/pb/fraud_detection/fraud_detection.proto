@@ -13,3 +13,15 @@ message HelloRequest {
 message HelloResponse {
     string greeting = 1;
 }
+
+message FraudDetectionRequest {
+  int32 quantity = 1;
+}
+
+message FraudDetectionResponse {
+  bool is_fraudulent = 1;
+}
+
+service FraudDetectionService {
+  rpc DetectFraud(FraudDetectionRequest) returns (FraudDetectionResponse);
+}

@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package transaction_verification;
+
+message TransactionVerificationRequest {
+  User user = 1;
+}
+
+message User {
+  string name = 1;
+  string contact = 2;
+}
+
+message Item {
+  string id = 1;
+  string name = 2;
+  int32 quantity = 3;
+  float price = 4;  
+}
+
+message TransactionVerificationResponse {
+  bool is_valid = 1;
+  string message = 2; 
+}
+
+
+service TransactionVerificationService {
+  rpc VerifyTransaction(TransactionVerificationRequest) returns (TransactionVerificationResponse);
+}

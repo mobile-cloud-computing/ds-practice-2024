@@ -15,3 +15,15 @@ class HelloResponse(_message.Message):
     GREETING_FIELD_NUMBER: _ClassVar[int]
     greeting: str
     def __init__(self, greeting: _Optional[str] = ...) -> None: ...
+
+class FraudDetectionRequest(_message.Message):
+    __slots__ = ("quantity",)
+    QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    quantity: int
+    def __init__(self, quantity: _Optional[int] = ...) -> None: ...
+
+class FraudDetectionResponse(_message.Message):
+    __slots__ = ("is_fraudulent",)
+    IS_FRAUDULENT_FIELD_NUMBER: _ClassVar[int]
+    is_fraudulent: bool
+    def __init__(self, is_fraudulent: bool = ...) -> None: ...
