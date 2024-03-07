@@ -1,9 +1,6 @@
 import sys
 import os
 
-# This set of lines are needed to import the gRPC stubs.
-# The path of the stubs is relative to the current file, or absolute inside the container.
-# Change these lines only if strictly needed.
 FILE = __file__ if '__file__' in globals() else os.getenv("PYTHONFILE", "")
 utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/suggestions'))
 sys.path.insert(0, utils_path)
@@ -16,6 +13,7 @@ from concurrent import futures
 class Suggestions(suggestions_grpc.SuggestionsServiceServicer):
     def Suggestions(self, request, context):
         response = suggestions.SuggestionResponse()
+        print("Looking for Suggestions...")
 
         book = {'bookId': '123', 'title': 'Dummy Book 1', 'author': 'Author 1'}
         book = suggestions.Book()
@@ -34,23 +32,19 @@ class Suggestions(suggestions_grpc.SuggestionsServiceServicer):
         book.author = "Author 1"
         response.suggestedBooks.append(book)
 
-        print("Suggestions")
-
-        # Return the response object
         return response
 
 def serve():
     # Create a gRPC server
     server = grpc.server(futures.ThreadPoolExecutor())
-    # Add HelloService
-    # fraud_detection_grpc.add_HelloServiceServicer_to_server(HelloService(), server)
+    # Add Suggestions service
     suggestions_grpc.add_SuggestionsServiceServicer_to_server(Suggestions(), server)
-    # Listen on port 50051
+    # Listen on port 50053
     port = "50053"
     server.add_insecure_port("[::]:" + port)
     # Start the server
     server.start()
-    print("Server started. Listening on port 50053.")
+    print(f"Server started. Listening on port {port}.")
     # Keep thread alive
     server.wait_for_termination()
 
