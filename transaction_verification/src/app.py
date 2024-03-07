@@ -7,14 +7,14 @@ import os
 FILE = __file__ if '__file__' in globals() else os.getenv("PYTHONFILE", "")
 utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/transaction_verification'))
 sys.path.insert(0, utils_path)
-import transaction_pb2 as transaction_verification
-import transaction_pb2_grpc as transaction_verification_grpc
+import transaction_verification_pb2 as transaction_verification
+import transaction_verification_pb2_grpc as transaction_verification_grpc
 
 from concurrent import futures
 import grpc
 
 
-class TransactionService(transaction_verification_grpc.TransactionServiceServicer):
+class TransactionService(transaction_verification_grpc.TransactionVerificationServiceServicer):
     def VerifyTransaction(self, request, context):
         print("Transaction verification request received")
         
@@ -25,7 +25,7 @@ class TransactionService(transaction_verification_grpc.TransactionServiceService
     
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor())
-    transaction_verification_grpc.add_TransactionServiceServicer_to_server(TransactionService(), server)
+    transaction_verification_grpc.add_TransactionVerificationServiceServicer_to_server(TransactionService(), server)
     server.add_insecure_port('[::]:50052')
     server.start()
     print("Transaction Verification Service started on port 50052")

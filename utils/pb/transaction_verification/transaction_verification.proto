@@ -20,7 +20,6 @@ message Item {
 
 message TransactionVerificationResponse {
   bool is_valid = 1;
-  string message = 2; 
 }
 
 

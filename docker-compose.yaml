@@ -81,7 +81,7 @@ services:
       # Mount the utils directory in the current directory to the /app/utils directory in the container
       - ./utils:/app/utils
       # Mount the fraud_detection/src directory in the current directory to the /app/transaction_verification/src directory in the container
-      - ./fraud_detection/src:/app/transaction_verification/src
+      - ./transaction_verification/src:/app/transaction_verification/src
   book_suggestion:
     build:
       # Use the current directory as the build context
