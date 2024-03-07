@@ -10,16 +10,70 @@ sys.path.insert(0, utils_path)
 import fraud_detection_pb2 as fraud_detection
 import fraud_detection_pb2_grpc as fraud_detection_grpc
 
+FILE = __file__ if '__file__' in globals() else os.getenv("PYTHONFILE", "")
+utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/transaction_verification'))
+sys.path.insert(0, utils_path)
+import transaction_verification_pb2 as transaction_verification
+import transaction_verification_pb2_grpc as transaction_verification_grpc
+
+FILE = __file__ if '__file__' in globals() else os.getenv("PYTHONFILE", "")
+utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/suggestions'))
+sys.path.insert(0, utils_path)
+import suggestions_pb2 as suggestions
+import suggestions_pb2_grpc as suggestions_grpc
+
 import grpc
 
-def greet(name='you'):
+def FraudDetection(request):
     # Establish a connection with the fraud-detection gRPC service.
     with grpc.insecure_channel('fraud_detection:50051') as channel:
         # Create a stub object.
-        stub = fraud_detection_grpc.HelloServiceStub(channel)
+        stub = fraud_detection_grpc.FraudDetectionStub(channel)
         # Call the service through the stub object.
-        response = stub.SayHello(fraud_detection.HelloRequest(name=name))
-    return response.greeting
+        user = fraud_detection.User(
+            name=request['user']['name'],
+            contact=request['user']['contact']
+            )
+        billingAddress = fraud_detection.BillingAddress(
+            street=request['billingAddress']['street'],
+            city=request['billingAddress']['city'],
+            state=request['billingAddress']['state'],
+            zip=request['billingAddress']['zip'],
+            country=request['billingAddress']['country'],
+            )
+        response = stub.Detection(fraud_detection.DetectionRequest(user=user, billingAddress=billingAddress))
+    return response
+
+def TransactionVerification(request):
+    # Establish a connection with the fraud-detection gRPC service.
+    with grpc.insecure_channel('transaction_verification:50052') as channel:
+        # Create a stub object.
+        stub = transaction_verification_grpc.TransactionVerificationStub(channel)
+        # Call the service through the stub object.
+
+        creditCard = transaction_verification.CreditCard(
+            number=request['creditCard']['number'],
+            expirationDate=request['creditCard']['expirationDate'],
+            cvv=request['creditCard']['cvv']
+            )
+        response = stub.Verification(transaction_verification.VerificationRequest(creditCard=creditCard))
+    return response
+
+def SuggestionsService(request):
+    # Establish a connection with the fraud-detection gRPC service.
+    with grpc.insecure_channel('suggestions:50053') as channel:
+        # Create a stub object.
+        stub = suggestions_grpc.SuggestionsServiceStub(channel)
+        # Call the service through the stub object.
+
+        items = list()
+        for _item in request["items"]:
+            item = suggestions.Item()
+            item.name = _item["name"]
+            item.quantity = _item["quantity"]
+            items.append(item)
+        response = stub.Suggestions(suggestions.SuggestionRequest(items=items))
+    return response
 
 # Import Flask.
 # Flask is a web framework for Python.
@@ -33,17 +87,6 @@ app = Flask(__name__)
 # Enable CORS for the app.
 CORS(app)
 
-# Define a GET endpoint.
-@app.route('/', methods=['GET'])
-def index():
-    """
-    Responds with 'Hello, [name]' when a GET request is made to '/' endpoint.
-    """
-    # Test the fraud-detection gRPC service.
-    response = greet(name='orchestrator')
-    # Return the response.
-    return response
-
 @app.route('/checkout', methods=['POST'])
 def checkout():
     """
@@ -51,18 +94,30 @@ def checkout():
     """
     # Print request object data
     print("Request Data:", request.json)
+    response = {
+            "orderId": '123',
+            "status": '',
+            "suggestedBooks": []
+        }
+    fraud_detection_response = FraudDetection(request.json)
+    suggestions_response = SuggestionsService(request.json)
+    transaction_verification_response = TransactionVerification(request.json)
+    # suggestions_response = SuggestionsService(request.json)
 
-    # Dummy response following the provided YAML specification for the bookstore
-    order_status_response = {
-        'orderId': '12345',
-        'status': 'Order Approved',
-        'suggestedBooks': [
-            {'bookId': '123', 'title': 'Dummy Book 1', 'author': 'Author 1'},
-            {'bookId': '456', 'title': 'Dummy Book 2', 'author': 'Author 2'}
-        ]
-    }
+    for suggested_book in suggestions_response.suggestedBooks:
+        book_dict = {
+            "bookId": suggested_book.bookId,
+            "title": suggested_book.title,
+            "author": suggested_book.author
+        }
+        response["suggestedBooks"].append(book_dict)
 
-    return order_status_response
+    if fraud_detection_response.detected or not transaction_verification_response.verified:
+        response['status'] = 'Order Declined'
+    else:
+        response['status'] = 'Order Accepted'
+
+    return response
 
 
 if __name__ == '__main__':
