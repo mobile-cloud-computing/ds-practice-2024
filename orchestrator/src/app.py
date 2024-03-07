@@ -67,6 +67,17 @@ def book_suggestion_service(data):
         stub = book_suggestion_grpc.BookSuggestionServiceStub(channel)
         response = stub.SuggestBook(book_suggestion.BookSuggestionRequest(item=data['items'][0]))
         return response.books
+    
+def transform_suggested_book_response(suggested_books):
+    book_array = []
+    for book in suggested_books:
+        book_dict = {}
+        book_dict["bookId"] = book.id
+        book_dict["title"] = book.title
+        book_dict["author"] = book.author
+        book_array.append(book_dict)
+
+    return book_array # key: [bookId, title, author]
 
 @app.route('/checkout', methods=['POST'])
 def checkout():
@@ -95,17 +106,13 @@ def checkout():
         # if fraud_future.result() or not transaction_future.result():
             print("Checkout Rejected")
             return order_response
-    print(f"Suggested Books: {suggestion_future.result()}")
-
-
-    # Dummy response following the provided YAML specification for the bookstore
+        
+    suggested_books = suggestion_future.result()
+    
     order_status_response = {
         'orderId': '12345',
         'status': 'Order Approved',
-        'suggestedBooks': [
-            {'bookId': '123', 'title': 'Dummy Book 1', 'author': 'Author 1'},
-            {'bookId': '456', 'title': 'Dummy Book 2', 'author': 'Author 2'}
-        ]
+        'suggestedBooks': transform_suggested_book_response(suggested_books)
     }
 
     return order_status_response
