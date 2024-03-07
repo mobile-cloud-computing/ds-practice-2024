@@ -36,7 +36,7 @@ class Book(_message.Message):
     CATEGORY_FIELD_NUMBER: _ClassVar[int]
     IMG_FIELD_NUMBER: _ClassVar[int]
     PRICE_FIELD_NUMBER: _ClassVar[int]
-    id: int
+    id: str
     title: str
     author: str
     description: str
@@ -45,4 +45,4 @@ class Book(_message.Message):
     category: str
     img: str
     price: float
-    def __init__(self, id: _Optional[int] = ..., title: _Optional[str] = ..., author: _Optional[str] = ..., description: _Optional[str] = ..., copies: _Optional[int] = ..., copiesAvailable: _Optional[int] = ..., category: _Optional[str] = ..., img: _Optional[str] = ..., price: _Optional[float] = ...) -> None: ...
+    def __init__(self, id: _Optional[str] = ..., title: _Optional[str] = ..., author: _Optional[str] = ..., description: _Optional[str] = ..., copies: _Optional[int] = ..., copiesAvailable: _Optional[int] = ..., category: _Optional[str] = ..., img: _Optional[str] = ..., price: _Optional[float] = ...) -> None: ...

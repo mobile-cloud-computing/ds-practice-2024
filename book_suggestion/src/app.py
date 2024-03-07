@@ -12,37 +12,20 @@ import book_suggestion_pb2_grpc as book_suggestion_grpc
 
 from concurrent import futures
 import grpc
+import json
+import random
 
+with open(os.path.abspath(os.path.join(FILE, '../book_list.json'))) as f:
+    book_list_json = json.load(f)
+    book_list = [book_list_json[key] for key in book_list_json]
 
 class BookSuggestionService(book_suggestion_grpc.BookSuggestionServiceServicer):
     def SuggestBook(self, request, context):
         print("Boook Suggestion request received")
 
         print(f"Ordered Book: {request.item}")
-        suggest_books = [
-            {
-                "id": 1,
-                "title": "THE NEW YORKER",
-                "author": "The New Yorker",
-                "description": "description",
-                "copies": 5,
-                "copiesAvailable": 3,
-                "category": "magazine",
-                "img": "https://upload.wikimedia.org/wikipedia/commons/4/4d/Original_New_Yorker_cover.png",
-                "price": 8.99
-            },
-            {
-                "id": 2,
-                "title": "ESTONIA - A MODERN HISTORY",
-                "author": "NEIL TAYLOR",
-                "description": "description",
-                "copies": 2,
-                "copiesAvailable": 3,
-                "category": "history",
-                "img": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1526892615i/40186083.jpg",
-                "price": 23.5
-            }
-        ]
+        suggest_books = random.sample(book_list, 2)
+        
         return book_suggestion.BookSuggestionResponse(books=suggest_books)
 
     
