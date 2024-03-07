@@ -12,6 +12,8 @@ from fraud_detection import fraud_detection_pb2 as fraud_detection
 from fraud_detection import fraud_detection_pb2_grpc as fraud_detection_grpc
 from transaction_verification import transaction_verification_pb2 as transaction_verification
 from transaction_verification import transaction_verification_pb2_grpc as transaction_verification_grpc
+from book_suggestion import book_suggestion_pb2 as book_suggestion
+from book_suggestion import book_suggestion_pb2_grpc as book_suggestion_grpc
 
 import grpc
 from concurrent import futures
@@ -54,11 +56,17 @@ def fraud_detection_service(data):
         response = stub.DetectFraud(fraud_detection.FraudDetectionRequest(quantity=data["items"][0]['quantity']))
         return response.is_fraudulent
 
-def transaction_verification_service(data):
-    with grpc.insecure_channel('transaction:50052') as channel:
-        stub = transaction_verification_grpc.TransactionVerificationServiceStub(channel)
-        response = stub.VerifyTransaction(transaction_verification.TransactionVerificationRequest(user=data['user']))
-        return response.is_valid
+# def transaction_verification_service(data):
+#     with grpc.insecure_channel('transaction:50052') as channel:
+#         stub = transaction_verification_grpc.TransactionVerificationServiceStub(channel)
+#         response = stub.VerifyTransaction(transaction_verification.TransactionVerificationRequest(user=data['user']))
+#         return response.is_valid
+
+def book_suggestion_service(data):
+    with grpc.insecure_channel('book_suggestion:50053') as channel:
+        stub = book_suggestion_grpc.BookSuggestionServiceStub(channel)
+        response = stub.SuggestBook(book_suggestion.BookSuggestionRequest(item=data['items'][0]))
+        return response.books
 
 @app.route('/checkout', methods=['POST'])
 def checkout():
@@ -74,20 +82,20 @@ def checkout():
 
     with futures.ThreadPoolExecutor() as executor:
         fraud_future = executor.submit(fraud_detection_service, data)
-        transaction_future = executor.submit(transaction_verification_service, data)
+        # transaction_future = executor.submit(transaction_verification_service, data)
+        suggestion_future = executor.submit(book_suggestion_service, data)
 
         # futures.wait([fraud_future], return_when=futures.ALL_COMPLETED)
-
-        futures.wait([fraud_future, transaction_future], return_when=futures.ALL_COMPLETED)
+        # futures.wait([fraud_future, transaction_future, suggestion_future], return_when=futures.ALL_COMPLETED)
+        futures.wait([fraud_future, suggestion_future], return_when=futures.ALL_COMPLETED)
 
         order_response = {"status": "Rejected", "reason": "Fraud detected or invalid transaction"}
 
-        
-
-        # if fraud_future.result():
-        if fraud_future.result() or not transaction_future.result():
+        if fraud_future.result():
+        # if fraud_future.result() or not transaction_future.result():
             print("Checkout Rejected")
             return order_response
+    print(f"Suggested Books: {suggestion_future.result()}")
 
 
     # Dummy response following the provided YAML specification for the bookstore
