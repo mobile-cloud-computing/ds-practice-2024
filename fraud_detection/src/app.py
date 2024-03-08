@@ -26,12 +26,31 @@ class HelloService(fraud_detection_grpc.HelloServiceServicer):
         print(response.greeting)
         # Return the response object
         return response
+    
+class FraudDetectionService(fraud_detection_grpc.FraudDetectionServiceServicer):
+    def DetectFraud(self, request, context):
+        print("Fraud dectection request received")
+        
+        # a simple dummy check of is user name and contact exist
+        user_name = request.user.name
+        contact_number = request.user.contact
+        user_data_filled = bool(user_name and contact_number)
+        card_number = request.creditCard.number
+
+         # a simple dummy check if contact is between 7 and 15 inclusive, and if they are all digits
+        contact_is_number = (len(contact_number) >= 7 and len(contact_number) <= 15 )and contact_number.isdigit()
+
+        is_fraudulent = not user_data_filled or not contact_is_number or not card_number.isdigit()
+
+        print(f"Fraud check response: {'Fraudulent' if is_fraudulent else 'Not Fraudulent'}")
+        return fraud_detection.FraudDetectionResponse(is_fraudulent=is_fraudulent)
 
 def serve():
     # Create a gRPC server
     server = grpc.server(futures.ThreadPoolExecutor())
     # Add HelloService
     fraud_detection_grpc.add_HelloServiceServicer_to_server(HelloService(), server)
+    fraud_detection_grpc.add_FraudDetectionServiceServicer_to_server(FraudDetectionService(), server)
     # Listen on port 50051
     port = "50051"
     server.add_insecure_port("[::]:" + port)
