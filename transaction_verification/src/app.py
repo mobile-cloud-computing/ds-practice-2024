@@ -15,7 +15,10 @@ class TransactionVerification(transaction_verification_grpc.TransactionVerificat
         response = transaction_verification.VerificationResponse()
         print("Running Transaction Verification...")
 
-        response.verified = True
+        if len(request.creditCard.number)!=5:
+            response.verified =  False
+        else:
+            response.verified = True
 
         if response.verified:
             print("Transaction verified successfuly..")

@@ -15,7 +15,12 @@ class FraudDetection(fraud_detection_grpc.FraudDetectionServicer):
         response = fraud_detection.DetectionResponse()
         print("Running Fraud Detection...")
 
-        response.detected = False
+
+        print(request.user.name )
+        if request.user.name == "Alex":
+            response.detected = True
+        else:
+            response.detected = False
 
         if not response.detected:
             print("No fraud detected.")

@@ -80,6 +80,8 @@ CORS(app)
 # fraud_detection_thread.start()
 # suggestions_thread.start()
 # transaction_verification_thread.start()
+def run_in_thread(func, args, result_dict, key):
+    result_dict[key] = func(*args)
 
 @app.route('/checkout', methods=['POST'])
 def checkout():
@@ -88,9 +90,23 @@ def checkout():
     """
     print("Request Data:", request.json)
 
-    fraud_detection_response = FraudDetection(request.json)
-    suggestions_response = SuggestionsService(request.json)
-    transaction_verification_response = TransactionVerification(request.json)
+    results = {}
+
+    fraud_detection_thread = threading.Thread(target=run_in_thread, args=(FraudDetection, (request.json,), results, 'fraud_detection'))
+    suggestions_thread = threading.Thread(target=run_in_thread, args=(SuggestionsService, (request.json,), results, 'suggestions'))
+    transaction_verification_thread = threading.Thread(target=run_in_thread, args=(TransactionVerification, (request.json,), results, 'transaction_verification'))
+
+    fraud_detection_thread.start()
+    suggestions_thread.start()
+    transaction_verification_thread.start()
+
+    fraud_detection_thread.join()
+    suggestions_thread.join()
+    transaction_verification_thread.join()
+
+    fraud_detection_response = results['fraud_detection']
+    suggestions_response = results['suggestions']
+    transaction_verification_response = results['transaction_verification']
 
     print("Creatin response...")
     response = {
