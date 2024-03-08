@@ -5,10 +5,14 @@ from typing import ClassVar as _ClassVar, Mapping as _Mapping, Optional as _Opti
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class TransactionVerificationRequest(_message.Message):
-    __slots__ = ("user",)
+    __slots__ = ("user", "creditCard", "item")
     USER_FIELD_NUMBER: _ClassVar[int]
+    CREDITCARD_FIELD_NUMBER: _ClassVar[int]
+    ITEM_FIELD_NUMBER: _ClassVar[int]
     user: User
-    def __init__(self, user: _Optional[_Union[User, _Mapping]] = ...) -> None: ...
+    creditCard: CreditCard
+    item: Item
+    def __init__(self, user: _Optional[_Union[User, _Mapping]] = ..., creditCard: _Optional[_Union[CreditCard, _Mapping]] = ..., item: _Optional[_Union[Item, _Mapping]] = ...) -> None: ...
 
 class User(_message.Message):
     __slots__ = ("name", "contact")
@@ -18,22 +22,26 @@ class User(_message.Message):
     contact: str
     def __init__(self, name: _Optional[str] = ..., contact: _Optional[str] = ...) -> None: ...
 
+class CreditCard(_message.Message):
+    __slots__ = ("number", "expirationDate", "cvv")
+    NUMBER_FIELD_NUMBER: _ClassVar[int]
+    EXPIRATIONDATE_FIELD_NUMBER: _ClassVar[int]
+    CVV_FIELD_NUMBER: _ClassVar[int]
+    number: str
+    expirationDate: str
+    cvv: str
+    def __init__(self, number: _Optional[str] = ..., expirationDate: _Optional[str] = ..., cvv: _Optional[str] = ...) -> None: ...
+
 class Item(_message.Message):
-    __slots__ = ("id", "name", "quantity", "price")
-    ID_FIELD_NUMBER: _ClassVar[int]
+    __slots__ = ("name", "quantity")
     NAME_FIELD_NUMBER: _ClassVar[int]
     QUANTITY_FIELD_NUMBER: _ClassVar[int]
-    PRICE_FIELD_NUMBER: _ClassVar[int]
-    id: str
     name: str
     quantity: int
-    price: float
-    def __init__(self, id: _Optional[str] = ..., name: _Optional[str] = ..., quantity: _Optional[int] = ..., price: _Optional[float] = ...) -> None: ...
+    def __init__(self, name: _Optional[str] = ..., quantity: _Optional[int] = ...) -> None: ...
 
 class TransactionVerificationResponse(_message.Message):
-    __slots__ = ("is_valid", "message")
+    __slots__ = ("is_valid",)
     IS_VALID_FIELD_NUMBER: _ClassVar[int]
-    MESSAGE_FIELD_NUMBER: _ClassVar[int]
     is_valid: bool
-    message: str
-    def __init__(self, is_valid: bool = ..., message: _Optional[str] = ...) -> None: ...
+    def __init__(self, is_valid: bool = ...) -> None: ...

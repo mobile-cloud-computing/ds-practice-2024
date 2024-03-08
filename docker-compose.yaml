@@ -90,7 +90,7 @@ services:
       # Use the Dockerfile in the fraud_detection directorys
       dockerfile: ./book_suggestion/Dockerfile
     ports:
-      # Expose port 50052 on the host, and map port 50052 of the container to port 50052 on the host
+      # Expose port 50053 on the host, and map port 50053 of the container to port 50053 on the host
       - 50053:50053
     environment:
       # Pass the environment variables to the container

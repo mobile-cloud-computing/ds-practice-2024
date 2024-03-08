@@ -31,9 +31,17 @@ class FraudDetectionService(fraud_detection_grpc.FraudDetectionServiceServicer):
     def DetectFraud(self, request, context):
         print("Fraud dectection request received")
         
-        # a simple dummy check of quanity being more than 5
-        is_fraudulent = request.quantity > 5
-        
+        # a simple dummy check of is user name and contact exist
+        user_name = request.user.name
+        contact_number = request.user.contact
+        user_data_filled = bool(user_name and contact_number)
+        card_number = request.creditCard.number
+
+         # a simple dummy check if contact is between 7 and 15 inclusive, and if they are all digits
+        contact_is_number = (len(contact_number) >= 7 and len(contact_number) <= 15 )and contact_number.isdigit()
+
+        is_fraudulent = not user_data_filled or not contact_is_number or not card_number.isdigit()
+
         print(f"Fraud check response: {'Fraudulent' if is_fraudulent else 'Not Fraudulent'}")
         return fraud_detection.FraudDetectionResponse(is_fraudulent=is_fraudulent)
 

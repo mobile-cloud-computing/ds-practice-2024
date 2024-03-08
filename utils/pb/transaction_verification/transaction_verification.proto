@@ -4,24 +4,29 @@ package transaction_verification;
 
 message TransactionVerificationRequest {
   User user = 1;
+  CreditCard creditCard = 2;
+  Item item = 3;
 }
 
 message User {
-  string name = 1;
-  string contact = 2;
+    string name = 1;
+    string contact = 2;
+}
+
+message CreditCard {
+    string number = 1;
+    string expirationDate = 2;
+    string cvv = 3;
 }
 
 message Item {
-  string id = 1;
-  string name = 2;
-  int32 quantity = 3;
-  float price = 4;  
+    string name = 1;
+    int32 quantity = 2;
 }
 
 message TransactionVerificationResponse {
   bool is_valid = 1;
 }
-
 
 service TransactionVerificationService {
   rpc VerifyTransaction(TransactionVerificationRequest) returns (TransactionVerificationResponse);

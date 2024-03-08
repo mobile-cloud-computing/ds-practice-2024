@@ -14,8 +14,20 @@ message HelloResponse {
     string greeting = 1;
 }
 
+message User {
+    string name = 1;
+    string contact = 2;
+}
+
+message CreditCard {
+    string number = 1;
+    string expirationDate = 2;
+    string cvv = 3;
+}
+
 message FraudDetectionRequest {
-  int32 quantity = 1;
+  User user = 1;
+  CreditCard creditCard = 2;
 }
 
 message FraudDetectionResponse {
